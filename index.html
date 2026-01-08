@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contadores especiales</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Mountains+of+Christmas&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: 'Playfair Display', serif;
+}
+
+section {
+    position: relative;
+    min-height: 100vh;
+    padding: 60px 20px;
+    text-align: center;
+    overflow: hidden;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    transition: background-image 1.5s ease-in-out;
+}
+
+h1 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.contador {
+    font-size: 1.6em;
+}
+
+/* SECCIONES */
+.zona1 {
+    background-image: url("/REGALO-REYES-LAURA-/imagenes/1.jpg");
+}
+
+.zona2 {
+    background-image: url("/REGALO-REYES-LAURA-/imagenes/7.jpg");
+}
+
+.navidad {
+    background-image: url("/REGALO-REYES-LAURA-/imagenes/13.jpg");
+}
+
+.navidad h1 {
+    font-family: 'Mountains of Christmas', cursive;
+    color: gold;
+}
+
+.custom {
+    background: linear-gradient(135deg, #2b2b3d, #3a3a5c);
+}
+
+/* FLOTANTES */
+.flotante {
+    position: absolute;
+    pointer-events: none;
+    animation: flotar linear infinite;
+    opacity: 0.8;
+}
+
+@keyframes flotar {
+    from { transform: translateY(110vh) rotate(0deg); }
+    to   { transform: translateY(-120vh) rotate(360deg); }
+}
+
+/* MÓVIL */
+@media (max-width: 768px) {
+    h1 { font-size: 2.2em; }
+    .contador { font-size: 1.3em; }
+}
+</style>
+</head>
+
+<body>
+
+<section class="zona1">
+    <h1>🤍 ¿sabías el tiempo exacto que llevamos juntos? 🤍</h1>
+    <div id="contador1" class="contador"></div>
+</section>
+
+<section class="zona2">
+    <h1>El tiempo desde que te creíste que soy del Athletic</h1>
+    <div id="contador2" class="contador"></div>
+</section>
+
+<section class="navidad">
+    <h1>🎄 Tiempo que falta para Navidad 🎄</h1>
+    <div id="contadorNavidad" class="contador"></div>
+</section>
+
+<section class="custom">
+    <h1>➕ Contadores personalizados</h1>
+    <div id="custom"></div>
+</section>
+
+<script>
+/* FECHAS */
+const fecha1 = new Date(2025, 8, 30, 14, 35);
+const fecha2 = new Date(2025, 7, 14, 19, 0);
+
+/* CONTAR DESDE */
+function contarDesde(fecha, id) {
+    const ahora = new Date();
+    let s = Math.floor((ahora - fecha) / 1000);
+    if (s < 0) return;
+
+    const d = Math.floor(s / 86400); s %= 86400;
+    const h = Math.floor(s / 3600); s %= 3600;
+    const m = Math.floor(s / 60); s %= 60;
+
+    document.getElementById(id).textContent =
+        `${d} días, ${h} horas, ${m} minutos y ${s} segundos`;
+}
+
+/* NAVIDAD */
+function actualizarNavidad() {
+    const ahora = new Date();
+    let navidad = new Date(ahora.getFullYear(), 11, 25);
+    if (ahora > navidad) navidad.setFullYear(navidad.getFullYear() + 1);
+
+    let s = Math.floor((navidad - ahora) / 1000);
+    const d = Math.floor(s / 86400); s %= 86400;
+    const h = Math.floor(s / 3600); s %= 3600;
+    const m = Math.floor(s / 60); s %= 60;
+
+    document.getElementById("contadorNavidad").textContent =
+        `${d} días, ${h} horas, ${m} minutos y ${s} segundos`;
+}
+
+/* ROTAR FONDOS */
+function rotarFondos(seccion, inicio, fin) {
+    let i = inicio;
+    setInterval(() => {
+        seccion.style.backgroundImage =
+            `url('/REGALO-REYES-LAURA-/imagenes/${i}.jpg')`;
+        i++;
+        if (i > fin) i = inicio;
+    }, 3000);
+}
+
+/* FLOTANTES */
+function crearFlotantes(seccion, emojis, cantidad) {
+    for (let i = 0; i < cantidad; i++) {
+        const e = document.createElement("div");
+        e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        e.className = "flotante";
+        e.style.left = Math.random() * 100 + "%";
+        e.style.fontSize = 20 + Math.random() * 30 + "px";
+        e.style.animationDuration = 10 + Math.random() * 20 + "s";
+        seccion.appendChild(e);
+    }
+}
+
+/* LOOP */
+setInterval(() => {
+    contarDesde(fecha1, "contador1");
+    contarDesde(fecha2, "contador2");
+    actualizarNavidad();
+}, 1000);
+
+/* INICIO */
+rotarFondos(document.querySelector(".zona1"), 1, 6);
+rotarFondos(document.querySelector(".zona2"), 7, 12);
+
+crearFlotantes(document.querySelector(".zona1"), ["🤍","💋"], 25);
+crearFlotantes(document.querySelector(".zona2"), ["🤍","😽"], 25);
+crearFlotantes(document.querySelector(".navidad"), ["🎄","❄️","🎁"], 30);
+</script>
+
+</body>
+</html>
